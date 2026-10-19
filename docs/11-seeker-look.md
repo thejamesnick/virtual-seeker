@@ -67,7 +67,7 @@ Source: [android/seeker-overlay/](../android/seeker-overlay/) (built by `build.s
 
 Tuning steps (measured on screenshots): no overlay → clock at the very edge, too high · 113 px → 184 px in, too far · 12 px → 49 px · **39 px → ~82 px, matching the right side**. Approved by the user.
 
-Android's built-in cutout emulations are disabled by `sms setup` (they'd override ours). `sms doctor`: `✓ Display  camera-hole cutout + rounded corners`.
+**Fake cutouts removed:** the emulator image ships test overlays (`/product/overlay/DisplayCutoutEmulation*`) that fake other phones' cutouts. One of them, a black punch hole on the *left*, switched itself back on after a reboot (user report: "black dot on the left"). Disabling wasn't enough, so `sms setup` now **deletes** them, and `sms doctor` fails the Display check if any are present. `sms doctor`: `✓ Display  camera-hole cutout + rounded corners`.
 
 ## 3. Theme (inside Android)
 Measured from hands-on photos of a real Seeker (Decrypt review):

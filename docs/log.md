@@ -39,3 +39,4 @@
 - **Theme matched to a real Seeker** from review photos: light mode, lavender system colors (`#7B6EC6` seed), navy/black/teal wallpaper (D22).
 - **Colors refined** (user: "not there yet"): wallpaper redrawn with photo values corrected for the camera's color cast (slate-navy middle, gray-teal bottom). System colors now derived from the wallpaper (Material You) instead of a forced lavender (D23).
 - **Home screen like a real Seeker:** grid + dock arranged to match the real layout. New "dApps" (dApp Store spot) and "Wallet" icons/screens. Edge-to-edge and status-bar-icon fixes in the wallet screens (D24).
+- **Fixed stray black dot (top-left):** an emulator test overlay (left punch hole) re-enabled itself after a reboot. `sms setup` now deletes all `DisplayCutoutEmulation*` overlays; doctor checks they're gone.

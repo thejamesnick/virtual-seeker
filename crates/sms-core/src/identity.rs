@@ -96,10 +96,16 @@ const DISPLAY_OVERLAY_APK: &[u8] = include_bytes!("../../../profiles/seeker/over
 const DISPLAY_OVERLAY_PACKAGE: &str = "dev.sms.overlay.seekerdisplay";
 const DISPLAY_OVERLAY_PATH: &str = "/product/overlay/SeekerDisplayOverlay/SeekerDisplayOverlay.apk";
 
+/// The emulator image ships test overlays that fake other phones' cutouts (e.g. a left punch hole).
+/// A real Seeker has none, and they can switch themselves back on, so `sms setup` deletes them.
+const CUTOUT_EMULATIONS: &str = "/product/overlay/DisplayCutoutEmulation*";
+
 pub fn has_display_overlay(adb: &Adb) -> bool {
-    let enabled = adb.shell("cmd overlay list android").map(|o| o.contains(&format!("[x] {DISPLAY_OVERLAY_PACKAGE}"))).unwrap_or(false);
+    let overlays = adb.shell("cmd overlay list android").unwrap_or_default();
+    let enabled = overlays.contains(&format!("[x] {DISPLAY_OVERLAY_PACKAGE}"));
+    let emulations_gone = !overlays.contains("display.cutout.emulation");
     let size = adb.shell(&format!("stat -c %s {DISPLAY_OVERLAY_PATH}")).unwrap_or_default();
-    enabled && size.trim() == DISPLAY_OVERLAY_APK.len().to_string()
+    enabled && emulations_gone && size.trim() == DISPLAY_OVERLAY_APK.len().to_string()
 }
 
 /// Installs (or updates) the display overlay and reboots. Returns false if it was already current.
@@ -115,10 +121,8 @@ pub fn install_display_overlay(adb: &Adb) -> Result<bool> {
     let _ = std::fs::remove_file(&tmp);
     pushed?;
     adb.shell(&format!("chmod 644 {DISPLAY_OVERLAY_PATH}"))?;
-    // Android's own cutout emulations would override ours.
-    for emu in ["hole", "corner", "double", "tall", "waterfall", "emu01"] {
-        let _ = adb.shell(&format!("cmd overlay disable com.android.internal.display.cutout.emulation.{emu}"));
-    }
+    // Remove the emulator's fake cutouts (they override ours and can re-enable themselves).
+    adb.shell(&format!("rm -rf {CUTOUT_EMULATIONS}"))?;
     adb.reboot_and_wait(BOOT_TIMEOUT)?;
     Ok(true)
 }
