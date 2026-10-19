@@ -34,3 +34,4 @@
 - **Theme:** dark mode, Solana-purple system palette, Seeker-style wallpaper (via `ThemeActivity`). All applied by `sms setup`.
 - **Localnet sign-and-send ✅:** airdrop + sign-and-send through SMS Test Wallet → Seed Vault → Surfpool, confirmed `Status: Ok`. **v0.1 goal reached.**
 - Details: [10-sms-test-wallet.md](10-sms-test-wallet.md), [11-seeker-look.md](11-seeker-look.md).
+- **Fixed "square corners / status bar looks off"** (user report): the display rectangle was painted over the rounded metal corners. Mask now repaints the body, glass is pure black with underlap, corner radius 9.7 mm so frame and display layers only meet black-on-black (D20). Colors re-sampled from official renders (cool slate metal). Verified live in white and dark apps.

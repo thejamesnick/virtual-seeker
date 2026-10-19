@@ -80,3 +80,7 @@ Newest at the bottom. Each entry says what was decided, and why.
 ### D19 (2026-10-19): Theme via Android settings + a wallpaper activity in the SMS Test Wallet
 - **Decided:** dark mode and Material You palette (`#9945FF`) through `cmd uimode` / `theme_customization_overlay_packages`. The wallpaper is set by `ThemeActivity` in the SMS Test Wallet, because Android has no shell command for it.
 - **Why:** no custom system image needed. Everything is reversible, and `sms setup` applies it.
+
+### D20 (2026-10-19): Corner radius 9.7 mm so the emulator's layers can't misalign
+- **Decided:** body corner 9.7 mm (render ~10.8), metal band 0.9 mm. The mask repaints the body in its corners, the glass is pure black and runs under the display edge, and the colors are sampled from the official renders.
+- **Why:** the emulator draws the display rectangle over the frame and scales those two layers differently. Any metal inside the display rectangle showed as square notches or steps. At 9.7 mm the metal never enters it, which is the only geometry that looks right at every window size.

@@ -18,9 +18,10 @@ let ctx = CGContext(data: nil, width: W, height: H, bitsPerComponent: 8, bytesPe
                     space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
 let sw = CGFloat(screen.width), sh = CGFloat(screen.height)
 let screenRect = CGRect(x: dx, y: CGFloat(H) - dy - sh, width: sw, height: sh) // CG origin bottom-left
+// Same order as the emulator: background (back.png), then the display, then the foreground mask.
+ctx.draw(back, in: CGRect(x: 0, y: 0, width: W, height: H))
 ctx.draw(screen, in: screenRect)
 ctx.draw(mask, in: screenRect)
-ctx.draw(back, in: CGRect(x: 0, y: 0, width: W, height: H))
 let dest = CGImageDestinationCreateWithURL(out as CFURL, UTType.png.identifier as CFString, 1, nil)!
 CGImageDestinationAddImage(dest, ctx.makeImage()!, nil)
 CGImageDestinationFinalize(dest)

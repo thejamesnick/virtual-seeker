@@ -18,22 +18,30 @@ Files: [profiles/seeker/skin/](../profiles/seeker/skin/)
 |---|---|---|
 | Body | 73.5 × 154.8 × 9.3 mm | official spec, solanamobile.com/seeker |
 | Display | 1200 × 2670 @ 460 ppi = 66.3 × 147.4 mm | official spec |
-| Corner radius | ~10.8 mm | measured from Solana Mobile's official front render (pixel scan) |
+| Corner radius | 9.7 mm in the skin (the render measures ~10.8 mm, see "Square corners bug") | official front render (pixel scan) |
 | Volume keys | **left** side, 53.1–65.3 mm and 68.3–80.5 mm from the top | measured from the official front render |
 | Power / **Seed Vault fingerprint key** | **right** side, 111.3–129.9 mm from the top | official render (front) + back render (key next to the "Seed Vault" panel) |
 | Front camera | small **centered punch hole** near the top | hands-on review photo (Decrypt) |
-| Frame | gray metal, thin even black bezels | official renders + review photo |
+| Frame colors | cool slate metal: `#1F2425` lip, `#B5C4C7` chamfer highlight, `#516066` brushed, `#2D373A` mid, `#1B2123` inner lip | percentiles of frame/body pixels in the official back render |
 
 Scale: 18.1 px/mm (1200 px = 66.3 mm). Skin: 1348 × 2808, body 1330 × 2800, display at (74, 69).
+
+### Square corners bug (fixed 2026-10-19)
+**Symptom:** in every app the status bar looked "off": square corners poked into the rounded screen, and a faint square outline showed at all 4 corners.
+**Cause:** the emulator draws `back.png`, then the display **rectangle**, then `mask.png` on top. With an ~11 mm corner the metal curve reaches *inside* the display rectangle, so the display (and the mask's black corners) painted over the frame and left black square notches.
+**Fixes:**
+1. `mask.png` now repaints the phone body (frame + glass) in its corners, from the same drawing code as `back.png`.
+2. Glass is pure `#000000`, the same as the mask, and runs 4 px *under* the display edge so smoothed edge pixels blend black-on-black.
+3. The emulator scales the display layer and the frame layer by slightly different factors (e.g. 56.25% vs 55.98%; the `window.scale` setting is ignored), so metal drawn in both layers can never line up exactly. The corner radius is therefore **9.7 mm** with a 0.9 mm metal band: the glass curve clears the display-rectangle corner by 3 px (`(R − 65)·√2 ≤ R − rim − 3`), so the layers only meet black-on-black at any window size.
+4. `make-preview.swift` now draws layers in the emulator's order (back → display → mask). The old order (back on top) hid this bug.
+
+Verified live: all 4 corners on a white, scrolled Settings screen and in Fake dApp's dark status bar. No notches.
 
 ### Pixel-perfect symmetry (verified)
 `swift profiles/seeker/skin/check-skin.swift profiles/seeker/skin/back.png`
 ```
-top          metal 23  black 42
-bottom       metal 23  black 42
-left         metal 23  black 42
-right        metal 23  black 42
-TL/TR/BL/BR diagonal: metal 16  black 31   (identical; concentric corners)
+top / bottom / left / right   metal 16  black 53   (black includes the 4 px underlap)
+TL / TR / BL / BR diagonal    metal 13  black 37   (identical; concentric corners)
 ```
 - The body height was set to `display + (bodyW − displayW)` (154.7 mm instead of 154.8), so every side is **exactly** the same width. The 0.1 mm difference is invisible, while a 1 px difference was visible.
 - The frame shading is **symmetric**: concentric bands (dark lip → polished chamfer → brushed gray → inner lip), no directional light. The first version had a top-left light, which made the sides *look* different widths.

@@ -4,7 +4,7 @@
 //
 // Measurements (see docs/11-seeker-look.md):
 //   body 73.5 x 154.8 mm (official spec), display 1200x2670 @ 460 ppi = 66.3 x 147.4 mm
-//   corner radius ~10.8 mm, metal band ~1.1 mm + black bezel ~2.5 mm per side, buttons stick out ~0.5 mm
+//   corner radius 9.7 mm (render ~10.8, see below), metal band ~0.9 mm + black bezel ~2.7 mm per side, buttons stick out ~0.5 mm
 //   shading is symmetric so every side looks identical (no directional light)
 //   left side: two volume keys at 53.1-65.3 mm and 68.3-80.5 mm from the top
 //   right side: power / Seed Vault fingerprint key at 111.3-129.9 mm from the top
@@ -27,8 +27,13 @@ let W = bodyW + 2 * buttonOut, H = bodyH + 2 * padY
 let body = CGRect(x: buttonOut, y: padY, width: bodyW, height: bodyH)
 let screenX = body.minX + ((bodyW - screenW) / 2).rounded()
 let screenY = body.minY + ((bodyH - screenH) / 2).rounded()
-let bodyRadius = mm(10.8)
-let rim = mm(1.1)                               // visible metal band (front view)
+// Corner radius: the official render measures ~10.8 mm, but at that radius the metal reaches inside the
+// display's bounding rectangle. The emulator scales the display layer and the frame layer by slightly
+// different factors, so metal drawn there can never line up and leaves a 1-2 px step. With 9.7 mm and a
+// 0.9 mm metal band, the glass curve clears the display corner by 3 px and the layers only ever meet
+// black-on-black. Constraint: (R - border) * sqrt(2) <= R - rim - 3.
+let bodyRadius = mm(9.7)
+let rim = mm(0.9)                               // visible metal band (front view)
 let screenRadius = bodyRadius - (screenX - body.minX) + 2   // concentric with the body corner
 let cameraCenterY = mm(3.7)                                  // in screen coordinates
 let cameraR = mm(1.35)
@@ -59,59 +64,74 @@ func save(_ ctx: CGContext, _ name: String) {
     print("wrote \(url.path)")
 }
 
-// ---- back.png --------------------------------------------------------------------------------
-let back = context(W, H)
+// ---- the phone body (frame, keys, glass), drawn into any context ---------------------------------
+// Used twice: for back.png (behind the display) and for mask.png (on top of the display corners).
+// The Seeker's corners are so round that the metal reaches *inside* the display rectangle; the
+// emulator draws the display rectangle over back.png, so the mask has to repaint the frame there,
+// otherwise the corners show a black square notch.
 
-// Side keys (drawn first; the body covers their inner half). Metal like the frame.
-func key(_ x: CGFloat, _ fromMm: CGFloat, _ toMm: CGFloat, _ fill: CGGradient) {
-    let r = CGRect(x: x, y: body.minY + mm(fromMm), width: buttonOut + 10, height: mm(toMm) - mm(fromMm))
-    back.saveGState()
-    back.addPath(rr(r, 5)); back.clip()
-    back.drawLinearGradient(fill, start: CGPoint(x: r.minX, y: 0), end: CGPoint(x: r.maxX, y: 0), options: [])
-    back.restoreGState()
-}
-let metalKey = gradient([(0x45494C, 0), (0x8F9498, 0.5), (0x45494C, 1)])
-let vaultKey = gradient([(0x2E3134, 0), (0x62676B, 0.5), (0x2E3134, 1)])   // power / Seed Vault fingerprint key
-key(0, 53.1, 65.3, metalKey)                 // volume up (left)
-key(0, 68.3, 80.5, metalKey)                 // volume down (left)
-key(W - buttonOut - 10, 111.3, 129.9, vaultKey)   // power + fingerprint (right)
+let metalKey = gradient([(0x2D373A, 0), (0x8A9A9F, 0.5), (0x2D373A, 1)])
+let vaultKey = gradient([(0x1F2425, 0), (0x516066, 0.5), (0x1F2425, 1)])   // power / Seed Vault fingerprint key
 
 // Metal frame, shaded identically on every side: concentric bands from the outer edge inward
-// (dark outer lip -> bright polished chamfer -> brushed gray -> dark inner lip), so no side looks thicker.
+// (dark outer lip -> bright polished chamfer -> brushed -> dark inner lip), so no side looks thicker.
+// Colors sampled from Solana Mobile's official renders (median / percentiles of frame-edge and body
+// pixels): the Seeker's metal is a cool slate with a slight teal tint, not neutral gray.
 let bands: [(inset: CGFloat, hex: UInt32)] = [
-    (0, 0x2B2E31),            // outer lip
-    (1.5, 0x5E6367),
-    (3.5, 0xA7ACB0),          // polished chamfer highlight
-    (6, 0x7D8286),
-    (9, 0x5F6468),            // brushed band
-    (rim - 4, 0x45494C),
-    (rim - 1.5, 0x1A1C1E),    // inner lip against the glass
+    (0, 0x1F2425),            // outer lip (edge p25)
+    (1.5, 0x3A464A),
+    (3.5, 0xB5C4C7),          // polished chamfer highlight (edge p95)
+    (6, 0x708187),            // (body p90)
+    (9, 0x516066),            // brushed band (edge p75)
+    (rim - 4, 0x2D373A),      // (edge median)
+    (rim - 1.5, 0x1B2123),    // inner lip against the glass (body p10)
 ]
-for band in bands {
-    back.setFillColor(color(band.hex))
-    back.addPath(rr(body.insetBy(dx: band.inset, dy: band.inset), bodyRadius - band.inset)); back.fillPath()
+let glass = body.insetBy(dx: rim, dy: rim)
+
+func drawBody(_ g: CGContext) {
+    // Side keys first; the body covers their inner half.
+    func key(_ x: CGFloat, _ fromMm: CGFloat, _ toMm: CGFloat, _ fill: CGGradient) {
+        let r = CGRect(x: x, y: body.minY + mm(fromMm), width: buttonOut + 10, height: mm(toMm) - mm(fromMm))
+        g.saveGState()
+        g.addPath(rr(r, 5)); g.clip()
+        g.drawLinearGradient(fill, start: CGPoint(x: r.minX, y: 0), end: CGPoint(x: r.maxX, y: 0), options: [])
+        g.restoreGState()
+    }
+    key(0, 53.1, 65.3, metalKey)                       // volume up (left)
+    key(0, 68.3, 80.5, metalKey)                       // volume down (left)
+    key(W - buttonOut - 10, 111.3, 129.9, vaultKey)    // power + fingerprint (right)
+
+    for band in bands {
+        g.setFillColor(color(band.hex))
+        g.addPath(rr(body.insetBy(dx: band.inset, dy: band.inset), bodyRadius - band.inset)); g.fillPath()
+    }
+    // Black glass. Pure black, the same as the mask's black.
+    g.setFillColor(color(0x000000))
+    g.addPath(rr(glass, bodyRadius - rim)); g.fillPath()
+    // Faint, even glass-edge reflection.
+    g.setStrokeColor(color(0xFFFFFF, 0.05)); g.setLineWidth(2)
+    g.addPath(rr(glass.insetBy(dx: 1.5, dy: 1.5), bodyRadius - rim - 1.5)); g.strokePath()
+    // Earpiece slit in the top bezel.
+    g.setFillColor(color(0x1B2123))
+    g.addPath(rr(CGRect(x: W / 2 - mm(5), y: body.minY + rim + 6, width: mm(10), height: 5), 2.5)); g.fillPath()
 }
 
-// Black glass (front), flat to the rim.
-let glass = body.insetBy(dx: rim, dy: rim)
-back.setFillColor(color(0x020203))
-back.addPath(rr(glass, bodyRadius - rim)); back.fillPath()
-// Faint, even glass-edge reflection.
-back.setStrokeColor(color(0xFFFFFF, 0.05)); back.setLineWidth(2)
-back.addPath(rr(glass.insetBy(dx: 1.5, dy: 1.5), bodyRadius - rim - 1.5)); back.strokePath()
-
-// Earpiece slit in the top bezel.
-back.setFillColor(color(0x1A1C1E))
-back.addPath(rr(CGRect(x: W / 2 - mm(5), y: body.minY + rim + 6, width: mm(10), height: 5), 2.5)); back.fillPath()
-
-// Transparent display area.
+// ---- back.png --------------------------------------------------------------------------------
+let back = context(W, H)
+drawBody(back)
+// Transparent display area, inset so the glass runs a few px *under* the display edge: when the
+// emulator scales the window it smooths the display's border pixels, which must blend black-on-black.
+let underlap: CGFloat = 4
 back.setBlendMode(.clear)
-back.addPath(rr(CGRect(x: screenX, y: screenY, width: screenW, height: screenH), screenRadius)); back.fillPath()
+back.addPath(rr(CGRect(x: screenX, y: screenY, width: screenW, height: screenH).insetBy(dx: underlap, dy: underlap), screenRadius - underlap)); back.fillPath()
 save(back, "back.png")
 
-// ---- mask.png: display-sized; opaque = covers the display (corners, camera) -------------------
+// ---- mask.png: display-sized, drawn over the display. Opaque = the phone (frame + glass) shows. ---
 let mask = context(screenW, screenH)
-mask.setFillColor(color(0x000000)); mask.fill(CGRect(x: 0, y: 0, width: screenW, height: screenH))
+mask.saveGState()
+mask.translateBy(x: -screenX, y: -screenY)   // same coordinates as back.png
+drawBody(mask)
+mask.restoreGState()
 mask.setBlendMode(.clear)
 mask.addPath(rr(CGRect(x: 0, y: 0, width: screenW, height: screenH), screenRadius)); mask.fillPath()
 mask.setBlendMode(.normal)
