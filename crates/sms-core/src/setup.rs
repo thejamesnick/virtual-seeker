@@ -168,6 +168,11 @@ pub fn run(sms: &SmsPaths, opts: &SetupOptions, log: &mut dyn FnMut(&str)) -> Re
         log("  already a Seeker");
     }
 
+    log("Applying the Seeker display (camera-hole cutout, rounded corners, status bar)");
+    if !identity::install_display_overlay(&adb)? {
+        log("  already applied");
+    }
+
     match seed_vault_apk {
         Some(apk) if !identity::is_privileged(&adb, profile::SEED_VAULT_PACKAGE) => {
             log("Installing Seed Vault Simulator as a privileged system app");

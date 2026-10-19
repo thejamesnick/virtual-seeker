@@ -144,6 +144,11 @@ pub fn run(sms: &SmsPaths, avd: &str) -> Vec<Check> {
             } else {
                 Check::warn("Seed Vault on device", "not installed as privileged app", "Run `sms setup`")
             });
+            checks.push(if identity::has_display_overlay(&adb) {
+                Check::ok("Display", "camera-hole cutout + rounded corners")
+            } else {
+                Check::warn("Display", "no cutout/corner overlay (status bar not aligned)", "Run `sms setup`")
+            });
             checks.push(if theme::is_themed(&adb) {
                 Check::ok("Theme", "Seeker style (dark, Solana purple)")
             } else {

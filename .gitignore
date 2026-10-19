@@ -8,3 +8,5 @@
 /android/sms-wallet/build/
 /android/sms-wallet/app/build/
 /android/sms-wallet/local.properties
+
+/android/seeker-overlay/build/

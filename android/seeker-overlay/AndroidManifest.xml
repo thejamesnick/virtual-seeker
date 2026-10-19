@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Seeker display overlay: tells Android where the virtual Seeker's camera hole and rounded corners
+     are (what a phone maker configures), so the status bar lines up with the camera and keeps clear of
+     the corners. Installed as a static system overlay by `sms setup`. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.sms.overlay.seekerdisplay">
+    <overlay
+        android:targetPackage="android"
+        android:isStatic="true"
+        android:priority="10" />
+    <application android:hasCode="false" android:label="Seeker display" />
+</manifest>

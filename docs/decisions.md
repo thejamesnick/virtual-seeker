@@ -84,3 +84,7 @@ Newest at the bottom. Each entry says what was decided, and why.
 ### D20 (2026-10-19): Corner radius 9.7 mm so the emulator's layers can't misalign
 - **Decided:** body corner 9.7 mm (render ~10.8), metal band 0.9 mm. The mask repaints the body in its corners, the glass is pure black and runs under the display edge, and the colors are sampled from the official renders.
 - **Why:** the emulator draws the display rectangle over the frame and scales those two layers differently. Any metal inside the display rectangle showed as square notches or steps. At 9.7 mm the metal never enters it, which is the only geometry that looks right at every window size.
+
+### D21 (2026-10-19): Display overlay for camera cutout, corners and status bar
+- **Decided:** our own static framework overlay (cutout path, status bar height 134 px, corner radii) in `/product/overlay`, prebuilt APK embedded in `sms`.
+- **Why:** that's how real devices tell Android about their hardware, so apps see the same `DisplayCutout` and rounded-corner insets as on a Seeker, and the status bar lines up with the camera. Bonus: apps that handle cutouts can now be tested properly.

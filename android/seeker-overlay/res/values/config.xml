@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Values in display pixels (1200 x 2670, density 480). Must match profiles/seeker/skin/make-skin.swift:
+     camera hole centered, center 67 px below the top, radius 24 px; screen corner radius 113 px. -->
+<resources>
+    <!-- Cutout path: origin = top center of the display, units = px. -->
+    <string name="config_mainBuiltInDisplayCutout" translatable="false">M -24,67 A 24,24 0 1,0 24,67 A 24,24 0 1,0 -24,67 Z</string>
+    <string name="config_mainBuiltInDisplayCutoutRectApproximation" translatable="false">M -24,43 L 24,43 L 24,91 L -24,91 Z</string>
+    <bool name="config_fillMainBuiltInDisplayCutout">false</bool>
+
+    <!-- Status bar tall enough that its icons are vertically centered on the camera hole (center 67 px
+         -> height 2 x 67 = 134 px), like on a real Seeker. -->
+    <dimen name="status_bar_height">134px</dimen>
+    <dimen name="status_bar_height_default">134px</dimen>
+    <dimen name="status_bar_height_portrait">134px</dimen>
+
+    <!-- Rounded display corners. The screen's real corner radius is 113 px (the skin draws it), but
+         SystemUI pads the clock by the whole top radius, which pushed it ~184 px in. At status-bar
+         height the curve only takes ~10 px, so the top value is 39 px (tuned by measuring): the clock then sits at the
+         same distance from the left edge as the icons from the right edge (~84 px), like a real Seeker. -->
+    <dimen name="rounded_corner_radius">113px</dimen>
+    <dimen name="rounded_corner_radius_top">39px</dimen>
+    <dimen name="rounded_corner_radius_bottom">113px</dimen>
+</resources>

@@ -52,7 +52,24 @@ The emulator shrinks the window to fit the screen, and it scales the frame and t
 ### How it's applied
 `sms setup` writes the skin (embedded in the `sms` binary) to `~/.sms/skins/seeker` and sets in the AVD `config.ini`: `skin.name=seeker`, `skin.path=…`, `skin.dynamic=no`, `showDeviceFrame=yes`.
 
-## 2. Theme (inside Android)
+## 2. Display overlay: camera hole, rounded corners, status bar
+Source: [android/seeker-overlay/](../android/seeker-overlay/) (built by `build.sh` with aapt2/apksigner, no Gradle). Prebuilt copy: `profiles/seeker/overlay/SeekerDisplayOverlay.apk`, embedded in `sms`.
+
+**Problem (user report):** the clock and icons sat too close to the rounded corners and too high. The stock emulator image doesn't know the screen has a camera hole or rounded corners.
+
+**Fix:** a static system overlay on the `android` framework (what a phone maker ships), installed in `/product/overlay/` by `sms setup`:
+| Resource | Value | Effect |
+|---|---|---|
+| `config_mainBuiltInDisplayCutout` | `M -24,67 A 24,24 0 1,0 24,67 A 24,24 0 1,0 -24,67 Z` | Android knows the centered camera hole (same place and size as the skin) |
+| `status_bar_height(_default/_portrait)` | 134 px (= 2 × 67) | clock and icons are vertically centered on the camera, like a real Seeker |
+| `rounded_corner_radius` / `_bottom` | 113 px | the real screen corner radius |
+| `rounded_corner_radius_top` | 39 px | SystemUI pads the clock by the whole top radius (113 px pushed it ~184 px in). At status-bar height the curve only needs ~10 px, so 39 px was tuned by measuring until the clock sits as far from the left edge as the icons from the right |
+
+Tuning steps (measured on screenshots): no overlay → clock at the very edge, too high · 113 px → 184 px in, too far · 12 px → 49 px · **39 px → ~82 px, matching the right side**. Approved by the user.
+
+Android's built-in cutout emulations are disabled by `sms setup` (they'd override ours). `sms doctor`: `✓ Display  camera-hole cutout + rounded corners`.
+
+## 3. Theme (inside Android)
 Applied by `sms setup` ([theme.rs](../crates/sms-core/src/theme.rs)):
 | What | How |
 |---|---|
