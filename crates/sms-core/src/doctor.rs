@@ -150,7 +150,7 @@ pub fn run(sms: &SmsPaths, avd: &str) -> Vec<Check> {
                 Check::warn("Display", "no cutout/corner overlay (status bar not aligned)", "Run `sms setup`")
             });
             checks.push(if theme::is_themed(&adb) {
-                Check::ok("Theme", "Seeker style (light, lavender, navy wallpaper)")
+                Check::ok("Theme", "Seeker style (light, colors from the Seeker wallpaper)")
             } else {
                 Check::warn("Theme", "stock Android look", "Run `sms setup`")
             });

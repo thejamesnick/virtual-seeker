@@ -74,18 +74,20 @@ Measured from hands-on photos of a real Seeker (Decrypt review):
 | Real Seeker | Measured | Virtual Seeker |
 |---|---|---|
 | Light mode (light search bar, light system screens) | — | `cmd uimode night no` |
-| Lavender system UI (Seed Vault Wallet: status bar `#BDB0FF`, surfaces ~`#7973C2`) | review photo | Material You seed `#7B6EC6`, TONAL_SPOT, via `theme_customization_overlay_packages` |
-| Home wallpaper: navy top (`#0F263E`, `#001633`), near-black middle, blue-teal bottom (`#003854` → `#345E72`) | review photo | our own gradient in those colors (`make-wallpaper.swift`) |
+| System colors generated from the wallpaper (Material You, stock Android 16) | — | `color_source: home_wallpaper`, TONAL_SPOT (the first try forced lavender `#7B6EC6`, which came from the Seed Vault Wallet app's own colors) |
+| Home wallpaper, **color-corrected** against the photo's white point (`#C0B4E3` → white): top `#01223C` navy, near-black band behind the clock, middle `#252A3C` slate-navy, lower `#044558` deep teal-navy, bottom `#546D68` gray-teal | review photo | our own gradient in those colors (`make-wallpaper.swift`) |
 | Back panel: blue-gray slate | review photo | matches the frame's cool slate tint |
 
 Applied by `sms setup` ([theme.rs](../crates/sms-core/src/theme.rs)):
 | What | How |
 |---|---|
 | Light mode | `cmd uimode night no` |
-| System colors (Material You) seeded with lavender `#7B6EC6` | `settings put secure theme_customization_overlay_packages '{"android.theme.customization.system_palette":"7B6EC6", …}'` |
+| System colors from the wallpaper | `settings put secure theme_customization_overlay_packages '{"android.theme.customization.color_source":"home_wallpaper","android.theme.customization.theme_style":"TONAL_SPOT"}'` |
 | Wallpaper (home + lock) | Android has no shell command for it, so the SMS Test Wallet app has a `ThemeActivity` that sets the bundled wallpaper: `am start -W -n dev.sms.wallet/.ThemeActivity` |
 
-`sms doctor` shows `✓ Theme  Seeker style (light, lavender, navy wallpaper)` and `✓ Virtual Seeker … Seeker skin`.
+`sms doctor` shows `✓ Theme  Seeker style (light, colors from the Seeker wallpaper)`
+
+Still unknown: the exact stock Seeker wallpaper. No official download exists, and the only home-screen reference is one outdoor photo. A screenshot from a real Seeker would pin it exactly. and `✓ Virtual Seeker … Seeker skin`.
 
 ## Not done yet
 - Home screen layout: a real Seeker shows dApp Store + Wallet on the home screen. Ours still has the stock Google layout (Gmail, Photos, YouTube).

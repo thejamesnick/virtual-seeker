@@ -92,3 +92,7 @@ Newest at the bottom. Each entry says what was decided, and why.
 ### D22 (2026-10-19): Theme follows the real Seeker: light mode, lavender, navy/teal wallpaper
 - **Decided:** replace the first guess (dark + Solana purple/green) with values measured from real-device photos: light mode, Material You seed `#7B6EC6`, and a navy → black → blue-teal wallpaper (our own art in those colors).
 - **Why:** the goal is that the virtual Seeker looks like a real one. The first theme was a "Solana brand" guess, not the device's actual look.
+
+### D23 (2026-10-19): System colors derived from the wallpaper; wallpaper colors calibrated
+- **Decided:** stop forcing a palette. Use Material You `color_source: home_wallpaper` like stock Android, and redraw the wallpaper from the review photo after correcting the camera's color cast (the photo's white was `#C0B4E3`).
+- **Why:** the user said the colors still weren't right. The lavender came from the Seed Vault Wallet app's own UI, not the system. The uncorrected photo values were too purple/teal.

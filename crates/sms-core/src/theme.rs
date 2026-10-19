@@ -15,9 +15,8 @@ const SKIN_FILES: &[(&str, &[u8])] = &[
     ("mask.png", include_bytes!("../../../profiles/seeker/skin/mask.png")),
 ];
 
-/// Material You seed color: the lavender of a real Seeker's system UI (measured from review photos:
-/// status bar #BDB0FF, surfaces ~#7973C2). Seeker ships in light mode.
-pub const PALETTE_HEX: &str = "7B6EC6";
+/// Marker we store with the theme settings so `doctor` can tell the Seeker theme is applied.
+pub const THEME_MARKER: &str = "home_wallpaper";
 
 pub fn skin_dir(sms: &SmsPaths) -> PathBuf {
     sms.home.join("skins/seeker")
@@ -34,13 +33,12 @@ pub fn install_skin(sms: &SmsPaths, avd: &str) -> Result<()> {
     emulator::set_avd_config(avd, &[("skin.name", "seeker"), ("skin.path", &path), ("skin.dynamic", "no"), ("showDeviceFrame", "yes")])
 }
 
-/// Light mode + lavender palette + wallpaper, like a real Seeker (wallpaper needs the SMS Test Wallet app).
+/// Light mode + Seeker wallpaper, with system colors derived *from the wallpaper* (Material You), the way
+/// a stock Android 16 phone like the Seeker does it. The wallpaper needs the SMS Test Wallet app.
 pub fn apply_device_theme(adb: &Adb) -> Result<bool> {
     adb.shell("cmd uimode night no")?;
     let overlay = format!(
-        "{{\"android.theme.customization.system_palette\":\"{PALETTE_HEX}\",\
-          \"android.theme.customization.accent_color\":\"{PALETTE_HEX}\",\
-          \"android.theme.customization.color_source\":\"preset\",\
+        "{{\"android.theme.customization.color_source\":\"{THEME_MARKER}\",\
           \"android.theme.customization.theme_style\":\"TONAL_SPOT\"}}"
     );
     adb.shell(&format!("settings put secure theme_customization_overlay_packages '{overlay}'"))?;
@@ -54,6 +52,6 @@ pub fn apply_device_theme(adb: &Adb) -> Result<bool> {
 
 pub fn is_themed(adb: &Adb) -> bool {
     adb.shell("settings get secure theme_customization_overlay_packages")
-        .map(|v| v.contains(PALETTE_HEX))
+        .map(|v| v.contains(THEME_MARKER))
         .unwrap_or(false)
 }

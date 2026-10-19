@@ -17,11 +17,12 @@ func color(_ hex: UInt32, _ a: CGFloat = 1) -> CGColor {
             blue: CGFloat(hex & 0xff) / 255, alpha: a)
 }
 
-// Vertical base (CG origin is bottom-left): teal-blue bottom -> black middle -> navy top.
-// Measured: top #0F263E / #001633, middle ~#00000F, bottom #003854 -> #345E72.
+// Vertical base (CG origin is bottom-left). Values from a real Seeker home-screen photo, color-corrected
+// against the photo's white point (#C0B4E3 -> white): top #01223C navy, upper-middle near black,
+// middle #252A3C slate-navy, lower #044558 deep teal-navy, bottom #546D68 gray-teal.
 let base = CGGradient(colorsSpace: space,
-                      colors: [color(0x2E5668), color(0x003854), color(0x02060F), color(0x010309), color(0x001633), color(0x0F263E)] as CFArray,
-                      locations: [0, 0.12, 0.38, 0.6, 0.86, 1])!
+                      colors: [color(0x546D68), color(0x2F5560), color(0x044558), color(0x252A3C), color(0x0B0D17), color(0x01223C)] as CFArray,
+                      locations: [0, 0.08, 0.2, 0.45, 0.7, 1])!
 ctx.drawLinearGradient(base, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: h), options: [])
 
 // Soft glows to give depth (no hard shapes).
@@ -30,9 +31,9 @@ func glow(_ x: Double, _ y: Double, _ r: Double, _ hex: UInt32, _ a: CGFloat) {
     let c = CGPoint(x: x, y: y)
     ctx.drawRadialGradient(g, startCenter: c, startRadius: 0, endCenter: c, endRadius: r, options: [])
 }
-glow(600, -200, 1250, 0x3F7F98, 0.45)   // teal-blue glow rising from the bottom
-glow(250, 2700, 900, 0x163A5E, 0.35)    // navy haze, top left
-glow(1050, 2500, 700, 0x0C2440, 0.30)   // navy haze, top right
+glow(600, -250, 1100, 0x5E7A74, 0.35)   // gray-teal light rising from the bottom
+glow(600, 1200, 900, 0x2C3048, 0.30)    // slate-navy haze in the middle
+glow(300, 2750, 900, 0x0A2C4A, 0.40)    // navy haze, top
 
 // Subtle grain so the gradient doesn't band.
 var rng = SystemRandomNumberGenerator()
