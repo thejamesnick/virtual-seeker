@@ -36,7 +36,9 @@ Open "SMS Test Wallet" on the virtual Seeker: Seed Vault status, permission, acc
 | `SolanaTx.kt` | parses legacy/v0 transactions: message bytes, signer slot, inserts signature; Base58 |
 | `Rpc.kt` | `sendTransaction` JSON-RPC, chain → URL |
 | `Policy.kt` | ask / approve / reject |
-| `MainActivity.kt` | status screen, Connect Seed Vault, policy (also via intent extra) |
+| `MainActivity.kt` | status screen ("Wallet" on the home screen, own icon), Connect Seed Vault, policy (also via intent extra) |
+| `DappsActivity.kt` | "dApps" home-screen entry in the dApp Store spot: lists installed apps |
+| `ThemeActivity.kt` | sets the Seeker wallpaper |
 
 Libraries: `com.solanamobile:mobile-wallet-adapter-walletlib:2.2.0`, `com.solanamobile:seedvault-wallet-sdk:0.4.0`, coroutines. AGP 9.1.1, Gradle 9.7.1, compileSdk 37, minSdk 31.
 

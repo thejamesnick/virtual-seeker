@@ -8,7 +8,7 @@ use std::process::{Command, Stdio};
 use anyhow::{Context, Result, bail};
 
 use crate::emulator::{self, StartOptions};
-use crate::{identity, java, profile, sdk, seedvault, theme, util, AndroidSdk, SmsPaths};
+use crate::{home, identity, java, profile, sdk, seedvault, theme, util, AndroidSdk, SmsPaths};
 
 pub const REPOSITORY_XML: &str = "https://dl.google.com/android/repository/repository2-3.xml";
 pub const REPOSITORY_BASE: &str = "https://dl.google.com/android/repository/";
@@ -225,6 +225,10 @@ pub fn run(sms: &SmsPaths, opts: &SetupOptions, log: &mut dyn FnMut(&str)) -> Re
     if !theme::apply_device_theme(&adb)? {
         log("  wallpaper skipped (needs the SMS Test Wallet app)");
     }
+
+    log("Arranging the home screen like a real Seeker (dApps, Wallet, dock)");
+    let placed = home::apply_seeker_home(&adb)?;
+    log(&format!("  {placed} icons placed"));
 
     if !was_running {
         log("Shutting the virtual Seeker down");

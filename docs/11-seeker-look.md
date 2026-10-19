@@ -89,7 +89,23 @@ Applied by `sms setup` ([theme.rs](../crates/sms-core/src/theme.rs)):
 
 Still unknown: the exact stock Seeker wallpaper. No official download exists, and the only home-screen reference is one outdoor photo. A screenshot from a real Seeker would pin it exactly. and `✓ Virtual Seeker … Seeker skin`.
 
+## 4. Home screen layout
+Modeled on a real Seeker's home screen (hands-on photo). [home.rs](../crates/sms-core/src/home.rs) writes the Pixel launcher's `launcher_4_by_5.db` (`favorites` table: container `-100` = grid, `-101` = dock) as root, then restarts the launcher.
+
+| Row | Real Seeker (photo) | Virtual Seeker |
+|---|---|---|
+| 1 | Bluesky · Camera · **dApp Store** · Instagram | Clock · Camera · **dApps** · Calendar |
+| 2 | Maps · Apple Music · Photos · Play Store | Maps · YT Music · Photos · Settings |
+| 3 | Pocket Casts · TikTok · YouTube · **Wallet** | Fake dApp · Contacts · YouTube · **Wallet** |
+| Dock | Phone · Messages · Chrome · Gmail | Phone · Messages · Chrome · Gmail |
+
+- **dApps** (our app, `DappsActivity`, own icon): sits in the dApp Store spot. The real dApp Store only runs on Solana Mobile devices, so it lists the apps you installed (e.g. `sms install your-app.apk`) and opens them.
+- **Wallet** = the SMS Test Wallet with its own icon, in the Seed Vault Wallet spot.
+- Apps that aren't installed are skipped. Existing widgets are kept.
+- `sms doctor`: `✓ Home screen  Seeker layout (dApps, Wallet, dock)`.
+
+Differences left: the real Seeker shows a big clock widget at the top (ours: the Pixel date line), and its search bar sits *above* the dock (the Pixel launcher puts it below; no setting for that).
+
 ## Not done yet
-- Home screen layout: a real Seeker shows dApp Store + Wallet on the home screen. Ours still has the stock Google layout (Gmail, Photos, YouTube).
 - Boot animation (needs a custom system image).
 - The real Seeker's default wallpaper (ours is Seeker-style, not a copy).

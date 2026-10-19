@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wallet icon (our own design): a wallet with a card peeking out. 108dp adaptive canvas, art in the 72dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- card -->
+    <path android:fillColor="#7FD6C2" android:pathData="M38,36 L66,30 Q70,29 71,33 L73,42 L40,42 Z" />
+    <!-- wallet body -->
+    <path android:fillColor="#FFFFFF" android:pathData="M34,42 L74,42 Q78,42 78,46 L78,72 Q78,76 74,76 L34,76 Q30,76 30,72 L30,46 Q30,42 34,42 Z" />
+    <!-- clasp -->
+    <path android:fillColor="#B7ACF2" android:pathData="M62,53 L78,53 L78,65 L62,65 Q59,65 59,62 L59,56 Q59,53 62,53 Z" />
+    <path android:fillColor="#1E2A33" android:pathData="M66,59 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+</vector>

@@ -7,6 +7,7 @@
 pub mod adb;
 pub mod doctor;
 pub mod emulator;
+pub mod home;
 pub mod identity;
 pub mod java;
 pub mod localnet;

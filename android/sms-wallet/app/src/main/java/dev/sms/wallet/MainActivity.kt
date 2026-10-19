@@ -24,7 +24,7 @@ class MainActivity : Activity() {
         val pad = (16 * resources.displayMetrics.density).toInt()
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(pad, pad * 3, pad, pad)
+            setPadding(pad, pad, pad, pad)
         }
         root.addView(TextView(this).apply {
             text = "SMS Test Wallet"
@@ -50,7 +50,9 @@ class MainActivity : Activity() {
             })
         }
         root.gravity = Gravity.TOP
-        setContentView(root)
+        // Android 15+ is edge-to-edge: the wrapper takes the system-bar insets, root keeps its margins.
+        setContentView(android.widget.ScrollView(this).apply { fitsSystemWindows = true; addView(root) })
+        darkStatusBarIcons(this)
 
         if (checkSelfPermission(WalletContractV1.PERMISSION_ACCESS_SEED_VAULT) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(WalletContractV1.PERMISSION_ACCESS_SEED_VAULT), REQUEST_PERMISSION)
@@ -110,6 +112,14 @@ class MainActivity : Activity() {
     }
 
     companion object {
+        /** Light screens need dark status-bar icons. */
+        fun darkStatusBarIcons(activity: Activity) {
+            activity.window.insetsController?.setSystemBarsAppearance(
+                android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+            )
+        }
+
         const val TAG = "SmsWallet"
         private const val REQUEST_PERMISSION = 1
         private const val REQUEST_AUTHORIZE = 2

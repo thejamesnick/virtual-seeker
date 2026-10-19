@@ -10,17 +10,42 @@
     <queries>
         <package android:name="com.solanamobile.seedvaultimpl" />
         <package android:name="com.solanamobile.seedvault" />
+        <!-- dApps screen: list the launchable apps the developer installed -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application
         android:allowBackup="false"
         android:label="SMS Test Wallet"
+        android:icon="@mipmap/ic_wallet"
+        android:roundIcon="@mipmap/ic_wallet"
         android:usesCleartextTraffic="true"
         android:theme="@android:style/Theme.DeviceDefault.DayNight">
 
         <!-- Status screen: connect Seed Vault, pick the approval policy -->
+        <!-- "Wallet" on the home screen, where a real Seeker has its Seed Vault Wallet -->
         <activity
             android:name=".MainActivity"
+            android:label="Wallet"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- "dApps": sits where the dApp Store is on a real Seeker; lists your installed apps -->
+        <activity
+            android:name=".DappsActivity"
+            android:label="dApps"
+            android:icon="@mipmap/ic_dapps"
+            android:roundIcon="@mipmap/ic_dapps"
+            android:taskAffinity="dev.sms.wallet.dapps"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

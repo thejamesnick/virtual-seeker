@@ -4,7 +4,7 @@ use std::process::Command;
 
 use serde_json::{Value, json};
 
-use crate::{emulator, identity, java, localnet, profile, seedvault, setup, theme, util, AndroidSdk, SmsPaths};
+use crate::{emulator, home, identity, java, localnet, profile, seedvault, setup, theme, util, AndroidSdk, SmsPaths};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
@@ -148,6 +148,11 @@ pub fn run(sms: &SmsPaths, avd: &str) -> Vec<Check> {
                 Check::ok("Display", "camera-hole cutout + rounded corners")
             } else {
                 Check::warn("Display", "no cutout/corner overlay (status bar not aligned)", "Run `sms setup`")
+            });
+            checks.push(if home::has_seeker_home(&adb) {
+                Check::ok("Home screen", "Seeker layout (dApps, Wallet, dock)")
+            } else {
+                Check::warn("Home screen", "stock layout", "Run `sms setup`")
             });
             checks.push(if theme::is_themed(&adb) {
                 Check::ok("Theme", "Seeker style (light, colors from the Seeker wallpaper)")

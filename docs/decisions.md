@@ -96,3 +96,7 @@ Newest at the bottom. Each entry says what was decided, and why.
 ### D23 (2026-10-19): System colors derived from the wallpaper; wallpaper colors calibrated
 - **Decided:** stop forcing a palette. Use Material You `color_source: home_wallpaper` like stock Android, and redraw the wallpaper from the review photo after correcting the camera's color cast (the photo's white was `#C0B4E3`).
 - **Why:** the user said the colors still weren't right. The lavender came from the Seed Vault Wallet app's own UI, not the system. The uncorrected photo values were too purple/teal.
+
+### D24 (2026-10-19): Home screen written into the launcher database
+- **Decided:** `sms setup` writes the Seeker arrangement into the Pixel launcher's `favorites` table. "dApps" (in the dApp Store spot) and "Wallet" entries with our own icons ship in the SMS Test Wallet APK.
+- **Why:** the user wants the home screen to look like a real Seeker. We can't ship the real dApp Store or Seed Vault Wallet, so our entries take their places and stay useful (dApps lists your installed apps).
