@@ -15,8 +15,9 @@ const SKIN_FILES: &[(&str, &[u8])] = &[
     ("mask.png", include_bytes!("../../../profiles/seeker/skin/mask.png")),
 ];
 
-/// Material You seed color: Solana purple.
-pub const PALETTE_HEX: &str = "9945FF";
+/// Material You seed color: the lavender of a real Seeker's system UI (measured from review photos:
+/// status bar #BDB0FF, surfaces ~#7973C2). Seeker ships in light mode.
+pub const PALETTE_HEX: &str = "7B6EC6";
 
 pub fn skin_dir(sms: &SmsPaths) -> PathBuf {
     sms.home.join("skins/seeker")
@@ -33,9 +34,9 @@ pub fn install_skin(sms: &SmsPaths, avd: &str) -> Result<()> {
     emulator::set_avd_config(avd, &[("skin.name", "seeker"), ("skin.path", &path), ("skin.dynamic", "no"), ("showDeviceFrame", "yes")])
 }
 
-/// Dark mode + Solana-purple palette + wallpaper (wallpaper needs the SMS Test Wallet app).
+/// Light mode + lavender palette + wallpaper, like a real Seeker (wallpaper needs the SMS Test Wallet app).
 pub fn apply_device_theme(adb: &Adb) -> Result<bool> {
-    adb.shell("cmd uimode night yes")?;
+    adb.shell("cmd uimode night no")?;
     let overlay = format!(
         "{{\"android.theme.customization.system_palette\":\"{PALETTE_HEX}\",\
           \"android.theme.customization.accent_color\":\"{PALETTE_HEX}\",\

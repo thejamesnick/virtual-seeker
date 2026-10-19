@@ -70,14 +70,22 @@ Tuning steps (measured on screenshots): no overlay → clock at the very edge, t
 Android's built-in cutout emulations are disabled by `sms setup` (they'd override ours). `sms doctor`: `✓ Display  camera-hole cutout + rounded corners`.
 
 ## 3. Theme (inside Android)
+Measured from hands-on photos of a real Seeker (Decrypt review):
+| Real Seeker | Measured | Virtual Seeker |
+|---|---|---|
+| Light mode (light search bar, light system screens) | — | `cmd uimode night no` |
+| Lavender system UI (Seed Vault Wallet: status bar `#BDB0FF`, surfaces ~`#7973C2`) | review photo | Material You seed `#7B6EC6`, TONAL_SPOT, via `theme_customization_overlay_packages` |
+| Home wallpaper: navy top (`#0F263E`, `#001633`), near-black middle, blue-teal bottom (`#003854` → `#345E72`) | review photo | our own gradient in those colors (`make-wallpaper.swift`) |
+| Back panel: blue-gray slate | review photo | matches the frame's cool slate tint |
+
 Applied by `sms setup` ([theme.rs](../crates/sms-core/src/theme.rs)):
 | What | How |
 |---|---|
-| Dark mode | `cmd uimode night yes` |
-| System colors (Material You) seeded with Solana purple `#9945FF` | `settings put secure theme_customization_overlay_packages '{"android.theme.customization.system_palette":"9945FF", …}'` |
+| Light mode | `cmd uimode night no` |
+| System colors (Material You) seeded with lavender `#7B6EC6` | `settings put secure theme_customization_overlay_packages '{"android.theme.customization.system_palette":"7B6EC6", …}'` |
 | Wallpaper (home + lock) | Android has no shell command for it, so the SMS Test Wallet app has a `ThemeActivity` that sets the bundled wallpaper: `am start -W -n dev.sms.wallet/.ThemeActivity` |
 
-`sms doctor` shows `✓ Theme  Seeker style (dark, Solana purple)` and `✓ Virtual Seeker … Seeker skin`.
+`sms doctor` shows `✓ Theme  Seeker style (light, lavender, navy wallpaper)` and `✓ Virtual Seeker … Seeker skin`.
 
 ## Not done yet
 - Home screen layout: a real Seeker shows dApp Store + Wallet on the home screen. Ours still has the stock Google layout (Gmail, Photos, YouTube).

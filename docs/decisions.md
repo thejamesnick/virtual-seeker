@@ -88,3 +88,7 @@ Newest at the bottom. Each entry says what was decided, and why.
 ### D21 (2026-10-19): Display overlay for camera cutout, corners and status bar
 - **Decided:** our own static framework overlay (cutout path, status bar height 134 px, corner radii) in `/product/overlay`, prebuilt APK embedded in `sms`.
 - **Why:** that's how real devices tell Android about their hardware, so apps see the same `DisplayCutout` and rounded-corner insets as on a Seeker, and the status bar lines up with the camera. Bonus: apps that handle cutouts can now be tested properly.
+
+### D22 (2026-10-19): Theme follows the real Seeker: light mode, lavender, navy/teal wallpaper
+- **Decided:** replace the first guess (dark + Solana purple/green) with values measured from real-device photos: light mode, Material You seed `#7B6EC6`, and a navy → black → blue-teal wallpaper (our own art in those colors).
+- **Why:** the goal is that the virtual Seeker looks like a real one. The first theme was a "Solana brand" guess, not the device's actual look.

@@ -36,3 +36,4 @@
 - Details: [10-sms-test-wallet.md](10-sms-test-wallet.md), [11-seeker-look.md](11-seeker-look.md).
 - **Fixed "square corners / status bar looks off"** (user report): the display rectangle was painted over the rounded metal corners. Mask now repaints the body, glass is pure black with underlap, corner radius 9.7 mm so frame and display layers only meet black-on-black (D20). Colors re-sampled from official renders (cool slate metal). Verified live in white and dark apps.
 - **Status bar fixed** (user report: too close to the edge / too high): Seeker display overlay with the camera-hole cutout, rounded corners, and status bar height centered on the camera. Clock/icon margins tuned by measurement to ~82 px each side (D21). Added to `sms setup` + `doctor`.
+- **Theme matched to a real Seeker** from review photos: light mode, lavender system colors (`#7B6EC6` seed), navy/black/teal wallpaper (D22).

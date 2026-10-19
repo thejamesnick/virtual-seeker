@@ -221,7 +221,7 @@ pub fn run(sms: &SmsPaths, opts: &SetupOptions, log: &mut dyn FnMut(&str)) -> Re
         }
     }
 
-    log("Applying the Seeker theme (dark mode, Solana-purple colors, wallpaper)");
+    log("Applying the Seeker theme (light mode, lavender colors, navy wallpaper)");
     if !theme::apply_device_theme(&adb)? {
         log("  wallpaper skipped (needs the SMS Test Wallet app)");
     }

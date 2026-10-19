@@ -31,7 +31,7 @@ Targets are rough, not promises.
 
 ## v0.3: Seeker features + compare
 - Mock Genesis Token and `.skr` on localnet
-- [x] Seeker skin (to scale, symmetric) + theme: dark, Solana purple, wallpaper ([doc 11](11-seeker-look.md))
+- [x] Seeker skin (to scale, symmetric, real colors) + display overlay (camera cutout, status bar) + theme matched to a real Seeker: light, lavender, navy/teal wallpaper ([doc 11](11-seeker-look.md))
 - [ ] Seeker-like home screen layout (dApp Store + Wallet)
 - Compare mode (virtual vs real)
 
