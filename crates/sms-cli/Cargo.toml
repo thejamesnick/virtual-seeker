@@ -1,0 +1,16 @@
+[package]
+name = "sms-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "`sms`: command-line tool for the virtual Seeker"
+
+[[bin]]
+name = "sms"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+sms-core.workspace = true

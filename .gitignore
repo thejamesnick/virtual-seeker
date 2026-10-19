@@ -1,0 +1,10 @@
+/target
+# third-party checkouts and APKs (see docs/05-dev-setup.md)
+/vendor/
+.DS_Store
+
+# Android build outputs
+/android/sms-wallet/.gradle/
+/android/sms-wallet/build/
+/android/sms-wallet/app/build/
+/android/sms-wallet/local.properties

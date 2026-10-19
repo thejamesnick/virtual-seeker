@@ -1,0 +1,15 @@
+[workspace]
+resolver = "3"
+members = ["crates/sms-core", "crates/sms-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+description = "Virtual Seeker: a Solana Seeker-like Android emulator for developers (community project, not affiliated with Solana Mobile)"
+
+[workspace.dependencies]
+anyhow = "1"
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }
+sms-core = { path = "crates/sms-core" }

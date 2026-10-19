@@ -1,0 +1,31 @@
+# Work log
+
+## 2026-10-18
+- Read About.txt (original concept).
+- Researched Solana Mobile: Seeker OS, MWA, Seed Vault, dApp Store, existing tooling, emulator/CI, Rust crates. Report in [reports/](../reports/).
+- Key finding: the official `solana-mobile` CLI exists and does a generic emulator, but no "virtual Seeker" exists → new direction (decisions D1–D6).
+- Set up the dev Mac: SDK command-line tools, Android 16 image, Solana CLI 4.3.1 (+ libusb fix), Surfpool 1.6.1, wallet APKs, Solana Mobile source repos, Maestro. Details in [05-dev-setup.md](05-dev-setup.md).
+- Wrote project docs.
+- All tools verified working (see dev-setup "Verified" table).
+- Built the first virtual Seeker: `Seeker` AVD (Android 16, 1200x2670, density 480), booted in ~18 s.
+- Device identity changed to Seeker / solanamobile / Solana Mobile Inc. via writable system + build.prop edits. Settings shows Model: Seeker. Details in [06-virtual-seeker.md](06-virtual-seeker.md).
+- **Next:** build + install the Seed Vault Simulator with a test seed, then a wallet + one MWA sign flow on Surfpool.
+
+## 2026-10-19
+- MWA on the virtual Seeker: fakedapp ↔ fakewallet authorize, sign txn (signature verified), decline (`-3`). ✅
+- Surfpool 1.6.1 running offline on :8899, forwarded with `adb reverse`.
+- Built Seed Vault Simulator + Seed Vault fakewallet from source (Gradle 9.7.1).
+- Installed the simulator as a **privileged system app** (`install-seed-vault.sh`). Imported public test seed `SMS-test-seed`.
+- Wallet ↔ Seed Vault: authorize, derive keys (match `solana-keygen`), sign, decline. ✅
+- Found and fixed: SwiftShader freezes → `-gpu host` (6 s boot); stale-dump bug in `tap.sh`.
+- Key finding: no official wallet does MWA + Seed Vault together → we build a bridge wallet (D10).
+- Details in [07-wallet-and-seed-vault.md](07-wallet-and-seed-vault.md).
+- Step 0 (prove it by hand) done, except the bridge wallet and the localnet send.
+- Built the **`sms` Rust CLI v0.1** (`crates/sms-core` + `crates/sms-cli`): doctor, setup, start, stop, install, logs, devices. Installed with `cargo install --path crates/sms-cli`.
+- Tested all commands on the virtual Seeker. A fresh device built from zero by `sms setup` in 112 s (identity + privileged Seed Vault + wallet). Start in 6 s. Details in [08-sms-cli.md](08-sms-cli.md).
+- **Next:** test on a fresh machine, prebuilt Seed Vault APK, then the bridge wallet (D10) or the desktop app (v0.2).
+- **Test seed loaded automatically:** decoded the simulator's `seed_collection.pb`, `sms setup` now writes the public test seed itself (D15).
+- **Seed Vault APK built automatically** from a pinned seed-vault-sdk commit when missing (D16).
+- Fresh-user run (empty sms home, no vendor/, new device): **fully hands-off, 172 s**. The wallet authorized the auto-loaded seed, got the expected keys, and signed. Details in [09-auto-seed-vault.md](09-auto-seed-vault.md).
+- **Next:** test on a truly fresh Mac/Linux, then the bridge wallet (D10) or the desktop app (v0.2).
+- **SMS Test Wallet (bridge wallet) built:** `android/sms-wallet`. MWA outside, Seed Vault inside. Full real-Seeker path tested: fakedapp authorize, sign txn (signature verified by the app), sign msg, decline, scripted approve policy. Added to `sms setup`/`doctor`/`logs` (D17). Details in [10-sms-test-wallet.md](10-sms-test-wallet.md).

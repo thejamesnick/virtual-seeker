@@ -1,0 +1,10 @@
+[package]
+name = "sms-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core engine for the virtual Seeker (Android SDK, emulator, adb, Seeker profile)"
+
+[dependencies]
+anyhow.workspace = true
+serde_json.workspace = true

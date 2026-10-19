@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Normal (non-privileged) wallet access to Seed Vault, like third-party wallets on Seeker -->
+    <uses-permission android:name="com.solanamobile.seedvault.ACCESS_SEED_VAULT" />
+
+    <queries>
+        <package android:name="com.solanamobile.seedvaultimpl" />
+        <package android:name="com.solanamobile.seedvault" />
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:label="SMS Test Wallet"
+        android:usesCleartextTraffic="true"
+        android:theme="@android:style/Theme.DeviceDefault.DayNight">
+
+        <!-- Status screen: connect Seed Vault, pick the approval policy -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Mobile Wallet Adapter entry point (same filters as the official fakewallet) -->
+        <activity
+            android:name=".MwaActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="dev.sms.wallet.mwa_host_task"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+            <intent-filter android:order="1">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="solana-wallet" />
+            </intent-filter>
+            <intent-filter android:order="0">
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="solana-wallet" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
