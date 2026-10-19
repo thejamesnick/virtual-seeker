@@ -11,10 +11,10 @@ Targets are rough, not promises.
 - [x] Install a test wallet and run MWA sign + decline flows (testnet dapp; localnet send still open)
 - [x] Sign through Seed Vault (authorize seed, derive keys, sign, decline)
 - [x] Build the bridge test wallet: MWA + Seed Vault (D10) → SMS Test Wallet ([doc 10](10-sms-test-wallet.md))
-- [ ] Full localnet sign-and-send with a dapp that requests `localnet`
+- [x] Full localnet sign-and-send: confirmed on Surfpool ([doc 10](10-sms-test-wallet.md))
 - [x] Write down every step. That becomes `sms setup` / `sms start`
 
-## v0.1: `sms` CLI
+## v0.1: `sms` CLI ✅ goal reached (2026-10-19)
 - [x] `sms doctor`, `sms setup`, `sms start`, `sms stop`, `sms install`, `sms logs` (+ `sms devices`). See [08-sms-cli.md](08-sms-cli.md)
 - [x] Virtual Seeker created automatically (quick boot ~6 s; named clean snapshots still to do)
 - [x] Surfpool localnet started and connected (`sms start --localnet`)
@@ -31,7 +31,8 @@ Targets are rough, not promises.
 
 ## v0.3: Seeker features + compare
 - Mock Genesis Token and `.skr` on localnet
-- Seeker theme and launcher
+- [x] Seeker skin (to scale, symmetric) + theme: dark, Solana purple, wallpaper ([doc 11](11-seeker-look.md))
+- [ ] Seeker-like home screen layout (dApp Store + Wallet)
 - Compare mode (virtual vs real)
 
 ## v0.4: Automation / CI

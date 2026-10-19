@@ -4,7 +4,7 @@ use std::process::Command;
 
 use serde_json::{Value, json};
 
-use crate::{emulator, identity, java, localnet, profile, seedvault, setup, util, AndroidSdk, SmsPaths};
+use crate::{emulator, identity, java, localnet, profile, seedvault, setup, theme, util, AndroidSdk, SmsPaths};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
@@ -94,8 +94,9 @@ pub fn run(sms: &SmsPaths, avd: &str) -> Vec<Check> {
         let width = emulator::avd_config_value(avd, "hw.lcd.width").unwrap_or_default();
         let height = emulator::avd_config_value(avd, "hw.lcd.height").unwrap_or_default();
         let gpu = emulator::avd_config_value(avd, "hw.gpu.mode").unwrap_or_default();
+        let skin = if emulator::avd_config_value(avd, "skin.name").as_deref() == Some("seeker") { "Seeker skin" } else { "no skin" };
         if width == "1200" && height == "2670" {
-            Check::ok("Virtual Seeker", format!("AVD '{avd}' ({width}x{height}, gpu={gpu})"))
+            Check::ok("Virtual Seeker", format!("AVD '{avd}' ({width}x{height}, gpu={gpu}, {skin})"))
         } else {
             Check::warn("Virtual Seeker", format!("AVD '{avd}' exists but has no Seeker profile ({width}x{height})"), "Run `sms setup`")
         }
@@ -142,6 +143,11 @@ pub fn run(sms: &SmsPaths, avd: &str) -> Vec<Check> {
                 Check::ok("Seed Vault on device", "privileged system app")
             } else {
                 Check::warn("Seed Vault on device", "not installed as privileged app", "Run `sms setup`")
+            });
+            checks.push(if theme::is_themed(&adb) {
+                Check::ok("Theme", "Seeker style (dark, Solana purple)")
+            } else {
+                Check::warn("Theme", "stock Android look", "Run `sms setup`")
             });
             checks.push(if adb.has_package(profile::SMS_WALLET_PACKAGE) {
                 Check::ok("Wallet on device", "SMS Test Wallet (MWA → Seed Vault)")

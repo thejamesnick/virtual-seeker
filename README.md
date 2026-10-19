@@ -9,6 +9,8 @@
 - **Real Seeker over USB**: mirror and control a real phone in the same app, and compare it with the virtual one.
 - **No Android Studio needed**: `sms setup` downloads everything itself.
 
+![Virtual Seeker](docs/img-virtual-seeker.png)
+
 ## Quick start
 
 ```bash
@@ -21,7 +23,7 @@ sms logs                              # wallet / Seed Vault / crash logs
 sms stop
 ```
 
-Full CLI docs: [docs/08-sms-cli.md](docs/08-sms-cli.md). Status: **v0.1, works on macOS (Apple Silicon)**, not yet tested on a fresh machine or Linux.
+Full CLI docs: [docs/08-sms-cli.md](docs/08-sms-cli.md). Status: **v0.1 goal reached** (app → wallet → Seed Vault → transaction confirmed on localnet), macOS Apple Silicon, not yet tested on a fresh machine or Linux.
 
 ## Docs
 
@@ -37,6 +39,7 @@ Full CLI docs: [docs/08-sms-cli.md](docs/08-sms-cli.md). Status: **v0.1, works o
 | [docs/08-sms-cli.md](docs/08-sms-cli.md) | The `sms` CLI: commands, files, code layout, test results |
 | [docs/09-auto-seed-vault.md](docs/09-auto-seed-vault.md) | Seed Vault built + test seed loaded automatically by `sms setup` |
 | [docs/10-sms-test-wallet.md](docs/10-sms-test-wallet.md) | SMS Test Wallet: MWA wallet backed by Seed Vault (the real Seeker path) |
+| [docs/11-seeker-look.md](docs/11-seeker-look.md) | Seeker skin (to scale, pixel-perfect) and theme |
 | [docs/decisions.md](docs/decisions.md) | Decision log (what we decided, when and why) |
 | [docs/log.md](docs/log.md) | Day-by-day work log |
 

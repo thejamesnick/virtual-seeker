@@ -29,3 +29,8 @@
 - Fresh-user run (empty sms home, no vendor/, new device): **fully hands-off, 172 s**. The wallet authorized the auto-loaded seed, got the expected keys, and signed. Details in [09-auto-seed-vault.md](09-auto-seed-vault.md).
 - **Next:** test on a truly fresh Mac/Linux, then the bridge wallet (D10) or the desktop app (v0.2).
 - **SMS Test Wallet (bridge wallet) built:** `android/sms-wallet`. MWA outside, Seed Vault inside. Full real-Seeker path tested: fakedapp authorize, sign txn (signature verified by the app), sign msg, decline, scripted approve policy. Added to `sms setup`/`doctor`/`logs` (D17). Details in [10-sms-test-wallet.md](10-sms-test-wallet.md).
+- **Git:** repo initialised, first commit `1f727bd` (author thejamesnick).
+- **Skin:** drew a Seeker frame to scale (official 73.5×154.8 mm + measurements from official renders and a review photo). Made it pixel-perfect symmetric after feedback (23 px metal + 42 px black on every side, verified by `check-skin.swift`). Found that the emulator's live window scales frame and screen by slightly different factors (±1–2 px).
+- **Theme:** dark mode, Solana-purple system palette, Seeker-style wallpaper (via `ThemeActivity`). All applied by `sms setup`.
+- **Localnet sign-and-send ✅:** airdrop + sign-and-send through SMS Test Wallet → Seed Vault → Surfpool, confirmed `Status: Ok`. **v0.1 goal reached.**
+- Details: [10-sms-test-wallet.md](10-sms-test-wallet.md), [11-seeker-look.md](11-seeker-look.md).

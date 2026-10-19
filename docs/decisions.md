@@ -72,3 +72,11 @@ Newest at the bottom. Each entry says what was decided, and why.
 - **Decided:** our own Kotlin app (`android/sms-wallet`, package `dev.sms.wallet`) built on the official `walletlib` + `seedvault-wallet-sdk` from Maven. `sms setup` installs it and disables the generic fakewallet.
 - **Why:** it's the only way to test the real Seeker path (app → MWA → wallet → Seed Vault). One wallet avoids the "choose a wallet" popup a real Seeker never shows.
 - **Design:** the wallet sends each transaction's *message bytes* to Seed Vault and inserts the signature itself. A policy (ask/approve/reject, settable over adb) automates the wallet prompt for CI, while Seed Vault's PIN stays manual to match a real Seeker.
+
+### D18 (2026-10-19): Skin drawn to scale from public measurements, perfectly symmetric
+- **Decided:** draw the frame in code (Swift/CoreGraphics) from the official 73.5 × 154.8 mm spec and measurements taken from Solana Mobile's official renders (button positions, corner radius) and review photos (camera). No photos or logos are copied. Every side gets exactly the same border (body height rounded 0.1 mm to make that true) and symmetric shading. `check-skin.swift` verifies it.
+- **Why:** the user wants it "pixel perfect" and recognisably a Seeker, while we can't ship Solana Mobile's artwork (D6).
+
+### D19 (2026-10-19): Theme via Android settings + a wallpaper activity in the SMS Test Wallet
+- **Decided:** dark mode and Material You palette (`#9945FF`) through `cmd uimode` / `theme_customization_overlay_packages`. The wallpaper is set by `ThemeActivity` in the SMS Test Wallet, because Android has no shell command for it.
+- **Why:** no custom system image needed. Everything is reversible, and `sms setup` applies it.

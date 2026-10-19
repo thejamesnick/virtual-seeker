@@ -64,7 +64,9 @@ Build gotchas we hit:
 
 **Fresh device, from zero** (`sms --avd SeekerFresh2 setup`, 108 s): identity → privileged Seed Vault → test seed → SMS Test Wallet. Then the app's very first **Authorize** made the wallet open Seed Vault's **"Connection request: from SMS Test Wallet"** inside the MWA flow → PIN → Approve → **Sign TXN** → Seed Vault PIN → `Verified memo transaction signature for publicKey GjJyeC1r…` ✅ (test device deleted after).
 
-Not tested yet: `sign_and_send` against Surfpool (fakedapp only uses testnet; needs a dapp requesting `solana:localnet`), SIWS (sign-in), v1 transactions (rejected as invalid on purpose).
+**Localnet sign-and-send ✅** (fakedapp rebuilt for `solana:localnet` with [build-localnet-dapp.sh](../profiles/seeker/build-localnet-dapp.sh)): authorize → Request Airdrop (0.001 SOL from Surfpool) → **Sign and send** → Seed Vault PIN → wallet: `Sent transaction JZQMiaUE…uAjd to http://localhost:8899` → `solana confirm` on Surfpool: **Status: Ok**, fee payer `GjJyeC1r…`, Memo program ran, balance 0.001 → 0.000994999 SOL.
+
+Not tested yet: SIWS (sign-in), v1 transactions (rejected as invalid on purpose).
 
 ## In `sms`
 - `sms setup` finds the APK (`$SMS_WALLET_APK`, `~/.sms/apks/SmsTestWallet.apk`, or the repo build output), **builds it from `android/sms-wallet` if missing**, installs it, grants the Seed Vault permission, and **disables the generic fakewallet** so there's one MWA wallet, like on a real Seeker (no "choose a wallet" popup).

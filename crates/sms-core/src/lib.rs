@@ -15,6 +15,7 @@ pub mod profile;
 pub mod sdk;
 pub mod seedvault;
 pub mod setup;
+pub mod theme;
 pub mod util;
 
 pub use paths::SmsPaths;

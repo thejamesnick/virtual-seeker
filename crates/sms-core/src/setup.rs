@@ -8,7 +8,7 @@ use std::process::{Command, Stdio};
 use anyhow::{Context, Result, bail};
 
 use crate::emulator::{self, StartOptions};
-use crate::{identity, java, profile, sdk, seedvault, util, AndroidSdk, SmsPaths};
+use crate::{identity, java, profile, sdk, seedvault, theme, util, AndroidSdk, SmsPaths};
 
 pub const REPOSITORY_XML: &str = "https://dl.google.com/android/repository/repository2-3.xml";
 pub const REPOSITORY_BASE: &str = "https://dl.google.com/android/repository/";
@@ -122,6 +122,8 @@ pub fn run(sms: &SmsPaths, opts: &SetupOptions, log: &mut dyn FnMut(&str)) -> Re
     }
     log("Applying the Seeker hardware profile (1200x2670, density 480, host GPU)");
     emulator::apply_hardware_profile(&opts.avd)?;
+    log("Installing the Seeker-style phone frame (skin)");
+    theme::install_skin(sms, &opts.avd)?;
 
     let seed_vault_apk = if opts.skip_seed_vault {
         None
@@ -212,6 +214,11 @@ pub fn run(sms: &SmsPaths, opts: &SetupOptions, log: &mut dyn FnMut(&str)) -> Re
                 adb.install(&wallet_apk)?;
             }
         }
+    }
+
+    log("Applying the Seeker theme (dark mode, Solana-purple colors, wallpaper)");
+    if !theme::apply_device_theme(&adb)? {
+        log("  wallpaper skipped (needs the SMS Test Wallet app)");
     }
 
     if !was_running {

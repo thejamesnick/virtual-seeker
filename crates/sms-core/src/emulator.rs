@@ -97,10 +97,15 @@ pub fn stop(sdk: &AndroidSdk, sms: &SmsPaths, avd: &str) -> Result<bool> {
 
 /// Writes the Seeker hardware profile into the AVD's `config.ini` (adds or replaces keys).
 pub fn apply_hardware_profile(avd: &str) -> Result<()> {
+    set_avd_config(avd, &profile::hardware_settings())
+}
+
+/// Sets keys in the AVD's `config.ini` (adds or replaces).
+pub fn set_avd_config(avd: &str, settings: &[(&str, &str)]) -> Result<()> {
     let cfg = avd_dir(avd)?.join("config.ini");
     let text = std::fs::read_to_string(&cfg).with_context(|| format!("reading {}", cfg.display()))?;
     let mut lines: Vec<String> = text.lines().map(str::to_string).collect();
-    for (key, value) in profile::hardware_settings() {
+    for &(key, value) in settings {
         let new_line = format!("{key}={value}");
         match lines.iter_mut().find(|l| l.split_once('=').map(|(k, _)| k.trim()) == Some(key)) {
             Some(line) => *line = new_line,
